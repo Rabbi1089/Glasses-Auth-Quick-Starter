@@ -1,33 +1,31 @@
 import { useForm } from "react-hook-form";
 import UseAuth from "./hooks/UseAuth";
-
+import {  useNavigate } from "react-router-dom";
 
 const Register = () => {
-    const {createUser} = UseAuth()
+  //navigate
+  const navigate = useNavigate();
+  const form = "/";
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-      } = useForm()
-    
-      const onSubmit = (data) =>{
-        //Destructure Email and password from data
-        const {email , password} = data;
-        createUser(email,password)
-        .then((result) => {
-  
-            const user = result.user;
-            console.log(user)
-       
-          })
-          .catch((error) => {
-            console.error(error , error.message)
-          });
-        
+  const { createUser } = UseAuth();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = (data) => {
+    //Destructure Email and password from data
+    const { email, password } = data;
+    createUser(email, password).then((result) => {
+      if (result.user) {
+        navigate(form);
       }
+    });
+  };
 
-      //after create a user need a observer
+  //after create a user need a observer
   return (
     //ctrl + alt + f
     <div>
@@ -36,7 +34,6 @@ const Register = () => {
           <div className="text-center lg:text-left">
             <h1 className="text-5xl font-bold">Login now!</h1>
             <p className="py-6">
-            
               Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
               excepturi exercitationem quasi. In deleniti eaque aut repudiandae
               et a id nisi.
@@ -54,7 +51,9 @@ const Register = () => {
                   className="input input-bordered"
                   {...register("fullName", { required: true })}
                 />
-                 {errors.fullName && <span className=" text-red-800">This field is required</span>}
+                {errors.fullName && (
+                  <span className=" text-red-800">This field is required</span>
+                )}
               </div>
               <div className="form-control">
                 <label className="label">
@@ -64,10 +63,11 @@ const Register = () => {
                   type="email"
                   placeholder="email"
                   className="input input-bordered"
-                  
                   {...register("email", { required: true })}
                 />
-                 {errors.email && <span className=" text-red-800">This field is required</span>}
+                {errors.email && (
+                  <span className=" text-red-800">This field is required</span>
+                )}
               </div>
               <div className="form-control">
                 <label className="label">
@@ -77,10 +77,11 @@ const Register = () => {
                   type="text"
                   placeholder="Image Url"
                   className="input input-bordered"
-                  
                   {...register("imgUrl")}
                 />
-                 {errors.imgUrl && <span className=" text-red-800">This field is required</span>}
+                {errors.imgUrl && (
+                  <span className=" text-red-800">This field is required</span>
+                )}
               </div>
               <div className="form-control">
                 <label className="label">
@@ -92,8 +93,10 @@ const Register = () => {
                   className="input input-bordered"
                   {...register("password", { required: true })}
                 />
-                 {errors.password && <span className=" text-red-800">This field is required</span>}
-           
+                {errors.password && (
+                  <span className=" text-red-800">This field is required</span>
+                )}
+
                 <label className="label">
                   <a href="#" className="label-text-alt link link-hover">
                     Forgot password?

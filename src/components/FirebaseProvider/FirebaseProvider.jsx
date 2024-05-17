@@ -1,75 +1,108 @@
-import { GithubAuthProvider, GoogleAuthProvider, TwitterAuthProvider, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
+import {
+  FacebookAuthProvider,
+  GithubAuthProvider,
+  GoogleAuthProvider,
+  TwitterAuthProvider,
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+} from "firebase/auth";
 import { createContext, useEffect, useState } from "react";
 import auth from "../firebase/FrebaseConfig";
 
+export const AuthContext = createContext(null);
 
+const FirebaseProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  console.log(loading);
+  //user are object type so here we can use null or {}
 
-export const AuthContext = createContext(null)
+  //social media provider
+  const googleProvider = new GoogleAuthProvider();
+  const githubProvider = new GithubAuthProvider();
+  const twitterProvider = new TwitterAuthProvider();
+  const facebookProvider = new FacebookAuthProvider();
 
-const FirebaseProvider = ({children}) => {
+  //google signInWithPopup
 
-        const [user , setUser] = useState(null)
-        console.log(user)
-        //user are object type so here we can use null or {}
+  const googleSignIn = () => {
+    setLoading(true);
+    return signInWithPopup(auth, googleProvider);
+  };
 
-    //social media provider
-    const googleProvider = new GoogleAuthProvider();
-    const githubProvider = new GithubAuthProvider();
-    const twitterProvider = new TwitterAuthProvider();
+  const githubSignIn = () => {
+    setLoading(true);
+    return signInWithPopup(auth, githubProvider);
+  };
 
+  const twitterLogin = () => {
+    setLoading(true);
+    return signInWithPopup(auth, twitterProvider);
+  };
 
+  const facebookLogin = () => {
+    setLoading(true);
+    return signInWithPopup(auth, facebookProvider);
+  };
 
+  //add only homepage and call back url , uncheck Webhook
 
-    //google signInWithPopup
+  const logout = () => {
+    setUser(null);
+    return signOut(auth);
+  };
 
-    const googleSignIn = () => {
-        return signInWithPopup(auth, googleProvider)
-    }
+  const createUser = (email, password) => {
+    setLoading(true);
+    return createUserWithEmailAndPassword(auth, email, password);
+  };
+  //Sign in a user
 
-    const githubSignIn = () => {
-        return signInWithPopup(auth, githubProvider)
-    }
+  const signInUser = (email, password) => {
+    setLoading(true);
+    return signInWithEmailAndPassword(auth, email, password);
+  };
 
-    const twitterLogin = () => {
-     
-        return signInWithPopup(auth, twitterProvider);
-      };
-    //add only homepage and call back url , uncheck Webhook
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+        setLoading(false);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
-    const logout = () => {
-        setUser(null)
-        return signOut(auth)
-    }
+  //Get the currently signed-in use and set user in state
+//   useEffect(() => {
+//     const unsubscribe = onAuthStateChanged(auth, (user) => {
+//       if (user) {
+//         setUser(user);
+//         setLoading(false);
+//       }
+//     });
 
-    const createUser = (email, password) => {
-        return createUserWithEmailAndPassword(auth, email, password)
-    }
-    //Sign in a user
+//     return () => unsubscribe();
+//   }, []);
 
-    const signInUser = (email, password) => {
-        return signInWithEmailAndPassword(auth, email, password)
-    }
+  const allValue = {
+    createUser,
+    signInUser,
+    googleSignIn,
+    githubSignIn,
+    twitterLogin,
+    user,
+    logout,
+    facebookLogin,
+    loading,
+  };
 
-    //Get the currently signed-in use and set user in state
-    useEffect(()=>{
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-             setUser(user)
-         
-            } 
-          });
-    }
-    ,[])
-
-    const allValue = { createUser , signInUser, googleSignIn ,
-        githubSignIn , twitterLogin , user, logout
-    }
-    
-    return (
-        <AuthContext.Provider value={allValue}>
-            {children}
-        </AuthContext.Provider>
-    );
+  return (
+    <AuthContext.Provider value={allValue}>{children}</AuthContext.Provider>
+  );
 };
 
 export default FirebaseProvider;

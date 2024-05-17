@@ -6,6 +6,8 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Register from "./components/Register.jsx";
 import FirebaseProvider from "./components/FirebaseProvider/FirebaseProvider.jsx";
 import Login from "./components/Login.jsx";
+import Product from "./components/Product.jsx";
+import PrivateRoute from "./components/privateRoute/PrivateRoute.jsx";
 
 const router = createBrowserRouter([
   {
@@ -17,9 +19,17 @@ const router = createBrowserRouter([
         element: <Register />,
       },
       {
-        path:"/login",
-        element: <Login />
-      }
+        path: "/login",
+        element: <Login />,
+      },
+      {
+        path: "/product",
+        element: (
+          <PrivateRoute>
+            <Product />
+          </PrivateRoute>
+        ),
+      },
     ],
   },
 ]);
