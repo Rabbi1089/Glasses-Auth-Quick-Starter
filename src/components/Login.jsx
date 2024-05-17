@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import UseAuth from "./hooks/UseAuth";
 import SocialLogin from "./SocialLogin";
 import { useLocation, useNavigate } from "react-router-dom";
+import PasswordResetModal from "../PasswordResetModal/PasswordResetModal";
 
 //https://react-hook-form.com/get-started
 
@@ -67,11 +68,7 @@ const Login = () => {
               {errors.password && (
                 <span className=" text-red-500">This field is required</span>
               )}
-              <label className="label">
-                <a href="#" className="label-text-alt link link-hover">
-                  Forgot password?
-                </a>
-              </label>
+              <PasswordResetModal />
             </div>
             <div className="form-control mt-6">
               <button className="btn btn-primary">Login</button>

@@ -2,12 +2,13 @@ import { useForm } from "react-hook-form";
 import UseAuth from "./hooks/UseAuth";
 import {  useNavigate } from "react-router-dom";
 
+
 const Register = () => {
   //navigate
   const navigate = useNavigate();
   const form = "/";
 
-  const { createUser } = UseAuth();
+  const { createUser , updateUser} = UseAuth();
 
   const {
     register,
@@ -17,11 +18,15 @@ const Register = () => {
 
   const onSubmit = (data) => {
     //Destructure Email and password from data
-    const { email, password } = data;
-    createUser(email, password).then((result) => {
-      if (result.user) {
+    const { email, password,fullName,  imgUrl} = data;
+
+
+    createUser(email, password).then(() => {
+      updateUser(fullName ,imgUrl )
+      .then(()=>{
         navigate(form);
-      }
+        alert('user updated')
+      })
     });
   };
 
@@ -97,11 +102,6 @@ const Register = () => {
                   <span className=" text-red-800">This field is required</span>
                 )}
 
-                <label className="label">
-                  <a href="#" className="label-text-alt link link-hover">
-                    Forgot password?
-                  </a>
-                </label>
               </div>
               <div className="form-control mt-6">
                 <button className="btn btn-primary">Login</button>

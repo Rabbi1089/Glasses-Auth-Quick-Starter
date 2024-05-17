@@ -5,7 +5,6 @@ const PrivateRoute = ({ children }) => {
   const { user, loading } = UseAuth();
   const location = useLocation();
 
-  console.log(loading);
   //where user was before click on private route location
 
 

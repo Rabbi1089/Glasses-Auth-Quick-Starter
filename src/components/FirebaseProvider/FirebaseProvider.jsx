@@ -5,9 +5,11 @@ import {
   TwitterAuthProvider,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
+  updateProfile,
 } from "firebase/auth";
 import { createContext, useEffect, useState } from "react";
 import auth from "../firebase/FrebaseConfig";
@@ -55,6 +57,16 @@ const FirebaseProvider = ({ children }) => {
     return signOut(auth);
   };
 
+//updateProfile
+
+  const updateUser = (name , imgUrl) => {
+    console.log(name, imgUrl)
+    return updateProfile(auth.currentUser, {
+        displayName: name, photoURL: imgUrl
+      })
+  }
+
+
   const createUser = (email, password) => {
     setLoading(true);
     return createUserWithEmailAndPassword(auth, email, password);
@@ -65,6 +77,11 @@ const FirebaseProvider = ({ children }) => {
     setLoading(true);
     return signInWithEmailAndPassword(auth, email, password);
   };
+
+  //Send a password reset email
+  const sentResetPassword = (email) => {
+    return sendPasswordResetEmail(auth, email)
+  }
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -90,6 +107,7 @@ const FirebaseProvider = ({ children }) => {
 
   const allValue = {
     createUser,
+    updateUser,
     signInUser,
     googleSignIn,
     githubSignIn,
@@ -98,6 +116,7 @@ const FirebaseProvider = ({ children }) => {
     logout,
     facebookLogin,
     loading,
+    sentResetPassword
   };
 
   return (
